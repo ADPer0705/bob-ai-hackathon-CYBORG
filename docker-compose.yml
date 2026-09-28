@@ -1,0 +1,41 @@
+# Verity containerized detection pipeline (docker compose convenience).
+#
+# Named volumes persist detector environments, weights, model caches and the
+# runtime workspace across container runs; ./input and ./output map the
+# investigation media and the resulting reports.
+#
+#   docker compose run --rm verity setup --all        # provision detector envs
+#   docker compose run --rm verity run                # analyze /input -> /output
+#   docker compose run --rm verity analyze
+#
+# GPU hosts: uncomment the deploy section / add `--gpus all` and set
+# VERITY_HW_PROFILE=cuda.
+
+services:
+  verity:
+    build: .
+    image: verity:latest
+    environment:
+      VERITY_HW_PROFILE: auto   # auto | cuda | cpu
+    security_opt:
+      - label=disable           # SELinux: allow reading /input and writing /output
+    volumes:
+      - verity-detectorenvs:/venvs
+      - verity-weights:/weights
+      - verity-cache:/cache
+      - verity-workspace:/workspace
+      - ./input:/input:ro
+      - ./output:/output
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+volumes:
+  verity-detectorenvs:
+  verity-weights:
+  verity-cache:
+  verity-workspace:

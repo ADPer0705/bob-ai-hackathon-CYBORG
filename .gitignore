@@ -94,3 +94,32 @@ logs/
 .terraform/
 *.tfstate
 *.tfstate.backup
+
+# =============================================================================
+# VERITY PROJECT-SPECIFIC
+# =============================================================================
+
+# Runtime data (ingested media, per-run artifacts)
+workspace/
+
+# Generated reports and saved analysis (output_dir in config/pipeline.yaml)
+output/
+
+# Built web console (npm run build in src/verity_ui)
+src/verity_ui/dist/
+
+# Model weights (dev-only, not distributed; fetched via scripts/download_detector_weights.py)
+detectors/*/weights/*.pth
+
+# Per-detector uv-managed environments (recreated on demand, see VERITY_DETECTOR_ENVS)
+.detectorenvs/
+
+# Non-project reference material (e.g. vendored DeepfakeBench checkout)
+misc/
+dist-bundle/
+
+# Ad-hoc submission bundles (not part of the source tree)
+*.zip
+
+# Reference sample report (375MB, exceeds GitHub file size limit)
+report.html
